@@ -282,14 +282,27 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 					backfaces: false,
 					type: "scene",
 					nodes: [{
+                                type:"translate",
+                                x: (options.stereo) ? 1000 : 0,
+				y: (options.stereo) ? 2600 : 0,
+				z: (options.stereo) ? 800 : 0,
+
+                                nodes:[{
+
+                                type:"rotate",
+                                x:1, y:0, z:0,
+                                angle: (options.stereo) ? -90.0 : 0,
+
+                                nodes:[{
+
 						type: (options.stereo) ? 'cameras/orbit' : 'lookAt',
 						id: 'main-lookAt',
 
-						eye: (typeof options.eye == 'object' ? options.eye : (options.stereo) ? {x:0, y:0, z:0} : { x: 1, y: 1, z: 1 }),
-						look: (typeof options.look == 'object' ? options.look : (options.stereo) ? { x: 0.0, y: -1.0, z: 0.0 } : { x: 0.0, y: 0.0, z: 0.0 }),
+						eye: (typeof options.eye == 'object' ? options.eye : ((options.stereo) ? {x:-10000, y:10000, z:-10000} : { x: 1, y: 1, z: 1 })),
+						look: (typeof options.look == 'object' ? options.look : ((options.stereo) ? { x: 0.0, y: 0.0, z: 0.0 } : { x: 0.0, y: 0.0, z: 0.0 })),
 						up: (typeof options.up == 'object' ? options.up : { x: 0.0, y: 0.0, z: 1.0 }),
 
-						yaw: 0,
+						yaw: -45,
 						pitch: 0,
 						zoom: 350,
 						zoomSensitivity:10.0,
@@ -329,6 +342,9 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 */
 							}])
 						}]
+						}]
+						}]
+
 					}]
 				};
 				console.log(this.scene);
