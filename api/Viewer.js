@@ -54,7 +54,7 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 		this.events = new BIMSURFER.Events(this);
 		this.connectedServers = new Array();
 		this.controls = new Array();
-		if(!BIMSURFER.Util.isset(options.controls)) {
+		if(!BIMSURFER.Util.isset(options.controls) && (!options.stereo)) {
 			this.addControl(new BIMSURFER.Control.PickFlyOrbit()).activateWhenReady();
 		} else if (BIMSURFER.Util.isArray(options.controls)) {
 			for(var i = 0; i < options.controls.length; i++) {
@@ -282,15 +282,23 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 					backfaces: false,
 					type: "scene",
 					nodes: [{
-						type: 'lookAt',
+						type: (options.stereo) ? 'cameras/orbit' : 'lookAt',
 						id: 'main-lookAt',
-						eye: (typeof options.eye == 'object' ? options.eye : { x: 1, y: 1, z: 1 }),
-						look: (typeof options.look == 'object' ? options.look : { x: 0.0, y: 0.0, z: 0.0 }),
+
+						eye: (typeof options.eye == 'object' ? options.eye : (options.stereo) ? {x:0, y:0, z:0} : { x: 1, y: 1, z: 1 }),
+						look: (typeof options.look == 'object' ? options.look : (options.stereo) ? { x: 0.0, y: -1.0, z: 0.0 } : { x: 0.0, y: 0.0, z: 0.0 }),
 						up: (typeof options.up == 'object' ? options.up : { x: 0.0, y: 0.0, z: 1.0 }),
+
+						yaw: 0,
+						pitch: 0,
+						zoom: 350,
+						zoomSensitivity:10.0,
+
 						nodes: [{
 							nodes: addCaptureNode([{
 								type: (options.stereo) ? 'effects/stereo' : 'camera',
 								id: 'main-camera',
+
 								optics: {
 									type: 'perspective',
 									far: (typeof options.far == 'number' ? options.far : 1000),
@@ -298,6 +306,7 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 									aspect: (typeof options.aspect ==  'number' ? options.aspect : jQuery(this.canvas).width() / jQuery(this.canvas).height()),
 									fovy: (typeof options.fovy ==  'number' ? options.fovy : 37.8493)
 								},
+
 								eyeSep: 1.1,
 								focalLength: 500,
 /*
@@ -358,8 +367,10 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 					this.lights[i].activate();
 				}
 				
-				var clickSelect = new BIMSURFER.Control.ClickSelect();
-				this.addControl(clickSelect);
+				if (!options.stereo) {
+					var clickSelect = new BIMSURFER.Control.ClickSelect();
+					this.addControl(clickSelect);
+				}
 				
 				if(this.scene != null) {
 					this.scene.set('tagMask', '^()$');

@@ -268,8 +268,10 @@ function GeometryLoader(bimServerApi, models, viewer) {
 		
 		if (firstModel) {
 			var lookat = o.viewer.scene.findNode("main-lookAt");
-			var eye = { x: (modelBounds.max.x - modelBounds.min.x) * 0.5, y: (modelBounds.max.y - modelBounds.min.y) * -1, z: (modelBounds.max.z - modelBounds.min.z) * 0.5 };
-			lookat.set("eye", eye);
+			if (lookat.type == 'lookAt') {
+				var eye = { x: (modelBounds.max.x - modelBounds.min.x) * 0.5, y: (modelBounds.max.y - modelBounds.min.y) * -1, z: (modelBounds.max.z - modelBounds.min.z) * 0.5 };
+				lookat.set("eye", eye);
+			}
 			
 			var maincamera = o.viewer.scene.findNode("main-camera");
 			
