@@ -277,13 +277,15 @@ function GeometryLoader(bimServerApi, models, viewer) {
 			
 			var far = diagonal * 5; // 5 being a guessed constant that should somehow coincide with the max zoom-out-factor
 			
-			maincamera.setOptics({
-				type: 'perspective',
-				far: far,
-				near: far / 1000,
-				aspect: jQuery(o.viewer.canvas).width() / jQuery(o.viewer.canvas).height(),
-				fovy: 37.8493
-			});
+			if (maincamera.setOptics) {
+				maincamera.setOptics({
+					type: 'perspective',
+					far: far,
+					near: far / 1000,
+					aspect: jQuery(o.viewer.canvas).width() / jQuery(o.viewer.canvas).height(),
+					fovy: 37.8493
+				});
+			}
 		}
 		o.state.mode = 1;
 		o.state.nrObjects = data.readInt();

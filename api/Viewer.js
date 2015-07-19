@@ -289,15 +289,18 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 						up: (typeof options.up == 'object' ? options.up : { x: 0.0, y: 0.0, z: 1.0 }),
 						nodes: [{
 							nodes: addCaptureNode([{
-								type: 'camera',
+								type: (options.stereo) ? 'effects/stereo' : 'camera',
 								id: 'main-camera',
 								optics: {
 									type: 'perspective',
-									far: (typeof options.far == 'number' ? options.far : 100),
+									far: (typeof options.far == 'number' ? options.far : 1000),
 									near: (typeof options.near == 'number' ? options.near : 0.001),
 									aspect: (typeof options.aspect ==  'number' ? options.aspect : jQuery(this.canvas).width() / jQuery(this.canvas).height()),
 									fovy: (typeof options.fovy ==  'number' ? options.fovy : 37.8493)
 								},
+								eyeSep: 1.1,
+								focalLength: 500,
+/*
 								nodes: [{
 									type: 'renderer',
 									id: 'main-renderer',
@@ -306,16 +309,20 @@ BIMSURFER.Viewer = BIMSURFER.Class({
 										depth: (typeof options.clearDepth ==  'boolean' ? options.clearDepth : true),
 										stencil: (typeof options.clearStencil ==  'boolean' ? options.clearStencil : true)
 									},
+*/
 									nodes: [{
 										type: 'lights',
 										id: 'my-lights',
 										lights: []
 									}]
+/*
 								}]
+*/
 							}])
 						}]
 					}]
 				};
+				console.log(this.scene);
 				
 				this.drawCanvas();
 				this.scene.canvasId = jQuery(this.canvas).attr('id');
